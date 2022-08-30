@@ -1,0 +1,39 @@
+{
+  "name": "rubiks-cube",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "lodash": "*",
+    "react": "*",
+    "react-dom": "*",
+    "three": "*"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "*",
+    "@types/lodash": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@types/three": "*",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "@vitejs/plugin-react": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-import-resolver-typescript": "*",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-prettier": "*",
+    "eslint-plugin-react": "*",
+    "eslint-plugin-react-hooks": "*",
+    "postcss": "*",
+    "prettier": "*",
+    "sass": "*",
+    "stylelint": "*",
+    "stylelint-config-standard": "*",
+    "typescript": "*",
+    "vite": "*"
+  }
+}
