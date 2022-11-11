@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "lodash": "*",
+    "normalize.css": "^8.0.1",
     "react": "*",
     "react-dom": "*",
     "three": "*"
@@ -32,6 +33,7 @@
     "prettier": "*",
     "sass": "*",
     "stylelint": "*",
+    "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-standard": "*",
     "typescript": "*",
     "vite": "*"

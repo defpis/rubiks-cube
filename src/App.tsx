@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import RubiksCube from '@/RubiksCube/RubiksCube';
+import RubiksCube from './RubiksCube/RubiksCube';
 
-const App: FC<{}> = () => {
+const App: FC = () => {
   return <RubiksCube />;
 };
 

@@ -7,9 +7,7 @@ interface CubeData {
 }
 
 export class Cube {
-  holder: THREE.Object3D;
-  object: THREE.Object3D;
-  animator: THREE.Object3D;
+  objects = new THREE.Object3D();
 
   size = 3;
   datas: CubeData[] = [];
@@ -19,25 +17,17 @@ export class Cube {
   cubes: THREE.Mesh<RoundedCubeGeometry, THREE.MeshLambertMaterial>[] = []; // 黑色部分
 
   constructor() {
-    this.object = new THREE.Object3D();
-    this.animator = new THREE.Object3D();
-    this.holder = new THREE.Object3D();
-
-    this.animator.add(this.object);
-    this.holder.add(this.animator);
-
     this.initialize();
   }
 
   initialize() {
-    this.object.children = [];
-
     this.generatePositions();
-    this.generateModel();
-    this.updateColors();
+    this.generateObjects();
+    this.setColors();
 
+    this.objects.children = [];
     this.pieces.forEach((piece) => {
-      this.object.add(piece);
+      this.objects.add(piece);
     });
   }
 
@@ -70,7 +60,7 @@ export class Cube {
     }
   }
 
-  generateModel() {
+  generateObjects() {
     this.edges = [];
     this.cubes = [];
     this.pieces = [];
@@ -78,17 +68,31 @@ export class Cube {
     const pieceSize = 1 / 3;
 
     const mainMaterial = new THREE.MeshLambertMaterial();
-    const pieceMesh = new THREE.Mesh(new RoundedCubeGeometry(pieceSize, 0.12, 90), mainMaterial.clone());
     const edgeGeometry = new RoundedPlaneGeometry(pieceSize, 0.15, 0.01);
+    // const edgeMesh = new THREE.Mesh(edgeGeometry, mainMaterial.clone());
+    const cubeMesh = new THREE.Mesh(new RoundedCubeGeometry(pieceSize, 0.12, 90), mainMaterial.clone());
 
     this.datas.forEach(({ position, edgeIndices }, index) => {
       const piece = new THREE.Object3D();
-      const pieceEdges: THREE.Mesh<RoundedPlaneGeometry, THREE.MeshLambertMaterial>[] = [];
+      piece.name = index.toString();
+      piece.position.copy(position.clone().divideScalar(3));
+      piece.userData = {
+        start: {
+          position: piece.position.clone(),
+          rotation: piece.rotation.clone(),
+        },
+      };
 
+      const pieceCube = cubeMesh.clone();
+      pieceCube.name = 'Cube#' + piece.name;
+      piece.add(pieceCube);
+      this.cubes.push(pieceCube);
+
+      const pieceEdges: THREE.Mesh<RoundedPlaneGeometry, THREE.MeshLambertMaterial>[] = [];
       edgeIndices.forEach((edgeIndex) => {
         const pieceEdge = new THREE.Mesh(edgeGeometry, mainMaterial.clone());
-
-        pieceEdge.name = ['L', 'R', 'D', 'U', 'B', 'F'][edgeIndex];
+        // const pieceEdge = edgeMesh.clone();
+        pieceEdge.name = ['L', 'R', 'D', 'U', 'B', 'F'][edgeIndex] + '#Edge#' + piece.name;
 
         const distance = pieceSize / 2;
         pieceEdge.position.set(
@@ -103,41 +107,28 @@ export class Cube {
         );
         pieceEdge.scale.set(0.85, 0.85, 0.85);
 
-        piece.add(pieceEdge);
-
         pieceEdges.push(pieceEdge);
+        piece.add(pieceEdge);
         this.edges.push(pieceEdge);
       });
 
-      const pieceCube = pieceMesh.clone();
-      piece.add(pieceCube);
+      piece.userData.cube = pieceCube;
+      piece.userData.edges = pieceEdges;
 
-      piece.name = index.toString();
-      piece.position.copy(position.clone().divideScalar(3));
-      piece.userData = {
-        start: {
-          position: piece.position.clone(),
-          rotation: piece.rotation.clone(),
-        },
-        edges: pieceEdges,
-        cube: pieceCube,
-      };
-
-      this.cubes.push(pieceCube);
       this.pieces.push(piece);
     });
   }
 
-  updateColors() {
+  setColors() {
     const colors: Record<string, number> = {
       U: 0xfff7ff, // up
       D: 0xffef48, // down
       L: 0x82ca38, // left
       R: 0x41aac8, // right
       F: 0xef3923, // front
-      B: 0xff8c0a, // bottom
+      B: 0xff8c0a, // back
     };
-    this.edges.forEach((edge) => edge.material.color.setHex(colors[edge.name]));
+    this.edges.forEach((edge) => edge.material.color.setHex(colors[edge.name.split('#')[0]]));
     this.cubes.forEach((cube) => cube.material.color.setHex(0x08101a));
   }
 }

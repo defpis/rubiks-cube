@@ -5,7 +5,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react],
   esbuild: {
-    jsxInject: 'import React from "react"',
+    jsxFactory: '_jsx',
+    jsxFragment: '_jsxFragment',
+    jsxInject: 'import { createElement as _jsx, Fragment as _jsxFragment } from "react"',
   },
   resolve: {
     alias: {

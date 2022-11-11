@@ -360,7 +360,7 @@ export class RoundedCubeGeometry extends THREE.BufferGeometry {
   }
 }
 
-export class RoundedPlaneGeometry extends THREE.ExtrudeBufferGeometry {
+export class RoundedPlaneGeometry extends THREE.ExtrudeGeometry {
   type = 'RoundedPlaneGeometry';
 
   constructor(size: number, radius: number, depth: number) {
